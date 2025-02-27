@@ -49,3 +49,20 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 })
 
 -- vim: ts=2 sts=2 sw=2 et
+local map = vim.keymap.set
+
+-- Leader Key
+vim.g.mapleader = " "
+
+-- File Navigation
+map("n", "<leader>pv", ":Ex<CR>", { noremap = true, silent = true })
+
+-- Window Navigation
+map("n", "<C-h>", "<C-w>h")
+map("n", "<C-l>", "<C-w>l")
+map("n", "<C-j>", "<C-w>j")
+map("n", "<C-k>", "<C-w>k")
+
+-- Buffer Management
+map("n", "<leader>bd", ":bd<CR>", { noremap = true, silent = true })
+

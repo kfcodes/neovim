@@ -1,3 +1,5 @@
+local opt = vim.opt
+
 -- [[ Setting options ]]
 -- See `:help vim.opt`
 -- NOTE: You can change these options as you wish!
@@ -57,3 +59,15 @@ vim.opt.cursorline = true
 vim.opt.scrolloff = 10
 
 -- vim: ts=2 sts=2 sw=2 et
+
+opt.number = true       -- Show line numbers
+opt.relativenumber = true
+opt.tabstop = 4         -- Set tab width
+opt.shiftwidth = 4
+opt.expandtab = true    -- Use spaces instead of tabs
+opt.smartindent = true  -- Auto indent new lines
+opt.wrap = false        -- Disable line wrapping
+opt.termguicolors = true -- Enable colors in terminal
+opt.splitright = true   -- Vertical split to the right
+opt.splitbelow = true   -- Horizontal split below
+
