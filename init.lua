@@ -10,7 +10,7 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 -- Load Lazy.nvim plugins
-require("lazy").setup("lua/plugins/plugins")
+require("lazy").setup("lua/plugins")
 
 -- Set <space> as the leader key
 -- See `:help mapleader`
