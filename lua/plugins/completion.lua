@@ -1,7 +1,8 @@
 return {
-  "hrsh7th/nvim-cmp",
-  "hrsh7th/cmp-nvim-lsp",
-  "saadparwaiz1/cmp_luasnip",
+  "hrsh7th/nvim-cmp",      -- Autocompletion core plugin
+  "hrsh7th/cmp-nvim-lsp",  -- LSP-based autocompletion
+  "saadparwaiz1/cmp_luasnip", -- Snippet support
+
   config = function()
     local cmp = require("cmp")
     cmp.setup({
@@ -17,3 +18,4 @@ return {
     })
   end
 }
+

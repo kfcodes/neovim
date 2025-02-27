@@ -1,4 +1,4 @@
--- Bootstrap Lazy.nvim if not installed
+-- 1️⃣ Bootstrap Lazy.nvim (Plugin Manager)
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system({
@@ -6,21 +6,14 @@ if not vim.loop.fs_stat(lazypath) then
     "https://github.com/folke/lazy.nvim.git", lazypath
   })
 end
-
 vim.opt.rtp:prepend(lazypath)
 
--- Load Lazy.nvim plugins
-require("lazy").setup("lua/plugins")
+-- 2️⃣ Load Core Settings (Options, Keymaps, Autocommands)
+require("core")
 
--- Set <space> as the leader key
--- See `:help mapleader`
---  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
-vim.g.mapleader = " "
-vim.g.maplocalleader = " "
+-- 3️⃣ Load Plugins from `lua/plugins/`
+require("lazy").setup(require("plugins"))
 
-require("config/keymaps")
-require("config/lazy-bootstrap")
-require("config/lazy-plugins")
-require("config/options")
-require("config/lsp")
-require("config/completion")
+-- 4️⃣ Load Plugin Configurations from `lua/config/`
+require("plugin_configs")
+
