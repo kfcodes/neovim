@@ -15,5 +15,5 @@ require("core")
 require("lazy").setup(require("plugins"))
 
 -- 4️⃣ Load Plugin Configurations from `lua/config/`
-require("plugin_configs")
+-- require("plugin_configs")
 
