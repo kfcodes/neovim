@@ -2,10 +2,18 @@ local lspconfig = require("lspconfig")
 
 require("mason").setup()
 require("mason-lspconfig").setup({
-  ensure_installed = { "lua_ls", "pyright", "tsserver" }
+    ensure_installed = {
+        "pyright",       -- Python
+        "yamlls",        -- YAML
+        "jsonls",        -- JSON
+        "ts_ls",         -- JavaScript/TypeScript
+        "dockerls",      -- Docker
+        "ansiblels",     -- Ansible
+    }
 })
 
-lspconfig.lua_ls.setup({})
-lspconfig.pyright.setup({})
-lspconfig.tsserver.setup({})
+local servers = { "pyright", "yamlls", "jsonls", "ts_ls", "dockerls", "ansiblels" }
+for _, server in ipairs(servers) do
+    lspconfig[server].setup({})
+end
 

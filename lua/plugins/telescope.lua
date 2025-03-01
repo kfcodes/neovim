@@ -1,10 +1,4 @@
-local status_ok, telescope = pcall(require, "telescope")
-if not status_ok then
-  vim.notify("Telescope failed to load", vim.log.levels.ERROR)
-  return
-end
-
-telescope.setup({
+require("telescope").setup({
   defaults = {
     file_ignore_patterns = { "node_modules", ".git" },
     mappings = {
@@ -21,6 +15,3 @@ telescope.setup({
   },
   extensions = {},
 })
-
--- Load optional extensions
-pcall(function() telescope.load_extension("fzf") end)

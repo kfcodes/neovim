@@ -10,6 +10,32 @@ vim.opt.rtp:prepend(lazypath)
 
 -- Setup lazy.nvim
 require("lazy").setup({
+
+     -- LSP Support
+    { "neovim/nvim-lspconfig", config = function() require("plugins.lsp") end },
+    { "williamboman/mason.nvim", config = function() require("mason").setup() end },
+    { "williamboman/mason-lspconfig.nvim" },
+
+    -- Auto-completion
+    { "hrsh7th/nvim-cmp", config = function() require("plugins.cmp") end },
+    { "hrsh7th/cmp-nvim-lsp" },
+    { "hrsh7th/cmp-buffer" },
+    { "hrsh7th/cmp-path" },
+    { "hrsh7th/cmp-cmdline" },
+    { "L3MON4D3/LuaSnip" },
+
+    -- Formatting & Linting
+    { "jose-elias-alvarez/null-ls.nvim", config = function() require("plugins.formatters") end },
+    { "jay-babu/mason-null-ls.nvim" },
+
+    -- Debugging
+    { "mfussenegger/nvim-dap", config = function() require("plugins.dap") end },
+    { "mfussenegger/nvim-dap-python" },
+
+    -- Git Support
+    { "tpope/vim-fugitive", config = function() require("plugins.git") end },
+    { "lewis6991/gitsigns.nvim" },
+
     -- Core plugins
     { "nvim-lua/plenary.nvim" }, -- Utility functions for many plugins
 
@@ -20,23 +46,6 @@ require("lazy").setup({
         config = function() require("plugins.treesitter") end,
     },
 
-    -- LSP and Completion
-    {
-        "neovim/nvim-lspconfig",
---        config = function() require("plugins.lsp") end,
-    },
-    {
-        "hrsh7th/nvim-cmp",
-        dependencies = {
-            "hrsh7th/cmp-nvim-lsp",
-            "hrsh7th/cmp-buffer",
-            "hrsh7th/cmp-path",
-            "hrsh7th/cmp-cmdline",
-            "L3MON4D3/LuaSnip",
-        },
-        config = function() require("plugins.cmp") end,
-    },
-
     -- Telescope for fuzzy finding
     {
         "nvim-telescope/telescope.nvim",
@@ -44,11 +53,11 @@ require("lazy").setup({
         config = function() require("plugins.telescope") end,
     },
 
-    -- File Explorer (Optional)
+    -- File Navigation
     {
         "nvim-tree/nvim-tree.lua",
         dependencies = { "nvim-tree/nvim-web-devicons" },
---        config = function() require("plugins.nvimtree") end,
+        config = function() require("plugins.nvimtree") end,
     },
 
     -- Git Integration
@@ -70,6 +79,33 @@ require("lazy").setup({
         config = function()
             vim.cmd("colorscheme tokyonight")
         end,
+    },
+    -- Git Integration
+    {
+        "tpope/vim-fugitive", -- Full Git integration
+    },
+    {
+        "tpope/vim-rhubarb", -- GitHub integration for vim-fugitive
+    },
+
+    -- tpope's Essential Workflow Plugins
+    {
+        "tpope/vim-surround", -- Easily add/change/delete surrounding characters
+    },
+    {
+        "tpope/vim-repeat", -- Enhances `.` command for plugin compatibility
+    },
+    {
+        "tpope/vim-unimpaired", -- Quick bracket mappings
+    },
+    {
+        "tpope/vim-commentary", -- Easy commenting
+    },
+    {
+        "tpope/vim-sleuth", -- Auto-detects indentation settings
+    },
+    {
+        "tpope/vim-abolish", -- Smart case-changing and search/replace
     },
 }, {
     ui = {
