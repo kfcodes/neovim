@@ -12,8 +12,4 @@ vim.opt.rtp:prepend(lazypath)
 require("core")
 
 -- 3️⃣ Load Plugins from `lua/plugins/`
-require("lazy").setup(require("plugins"))
-
--- 4️⃣ Load Plugin Configurations from `lua/config/`
--- require("plugin_configs")
-
+-- require("lazy").setup(require("plugins"))
