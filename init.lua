@@ -1,4 +1,4 @@
--- 1️⃣ Bootstrap Lazy.nvim (Plugin Manager)
+-- Bootstrap Lazy.nvim (Plugin Manager)
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system({
@@ -8,8 +8,5 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
--- 2️⃣ Load Core Settings (Options, Keymaps, Autocommands)
+-- Load Core Settings (Options, Keymaps, Autocommands)
 require("core")
-
--- 3️⃣ Load Plugins from `lua/plugins/`
--- require("lazy").setup(require("plugins"))
