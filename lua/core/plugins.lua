@@ -107,6 +107,12 @@ require("lazy").setup({
     {
         "tpope/vim-abolish", -- Smart case-changing and search/replace
     },
+    -- Latex support for vim
+    {
+        "lervag/vimtex",
+        ft = { "tex", "latex" },  -- Load only for LaTeX files
+        config = function() require("plugins.vimtex") end,
+    },
 }, {
     ui = {
         border = "rounded",
