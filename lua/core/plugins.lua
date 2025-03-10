@@ -70,7 +70,7 @@ require("lazy").setup({
     {
         "nvim-lualine/lualine.nvim",
         dependencies = { "nvim-tree/nvim-web-devicons" },
---        config = function() require("plugins.lualine") end,
+        -- config = function() require("plugins.lualine") end,
     },
 
     -- Colorscheme (Change to your preferred theme)
@@ -107,13 +107,29 @@ require("lazy").setup({
     {
         "tpope/vim-abolish", -- Smart case-changing and search/replace
     },
+
     -- Latex support for vim
+
     {
-        "lervag/vimtex",
-        ft = { "tex", "latex" },  -- Load only for LaTeX files
-        config = function() require("plugins.vimtex") end,
+        "gerw/vim-latex-suite",
+        lazy = false,
+        ft = { "tex", "latex" },
+        config = function()
+            vim.g.tex_flavor = "latex"
+        end
     },
-}, {
+    {
+        "SirVer/ultisnips",
+        lazy = true,
+        config = function()
+            vim.g.UltiSnipsExpandTrigger = "<Tab>"
+            vim.g.UltiSnipsJumpForwardTrigger = "<Tab>"
+            vim.g.UltiSnipsJumpBackwardTrigger = "<S-Tab>"
+        end
+    },
+
+},
+{
     ui = {
         border = "rounded",
     }
