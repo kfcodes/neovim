@@ -10,3 +10,14 @@ vim.opt.rtp:prepend(lazypath)
 
 -- Load Core Settings (Options, Keymaps, Autocommands)
 require("core")
+require("lazy").setup("plugins")
+
+require("lazy").setup("plugins", {
+    checker = {
+    enabled = true,
+    notify = false,
+  },
+  change_detection = {
+    notify = false,
+  },
+})
