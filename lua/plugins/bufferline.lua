@@ -1,15 +1,11 @@
--- Plugin: bufferline.nvim
--- Show open buffers as tabs in the tabline.
--- Loaded when Neovim is idle to avoid slowing startup.
+-- Show buffers as tabs in the tabline; delegate to ui.bufferline
+-- Loaded lazily when Neovim is idle to speed up startup.
 
 return {
   "akinsho/bufferline.nvim",
-  event = "VeryLazy",
+  event        = "VeryLazy",
   dependencies = { "nvim-tree/nvim-web-devicons" },
-  opts = {
-    options = {
-      mode            = "tabs",   -- display buffers as tabs
-      separator_style = "slant",  -- slanted separators between tabs
-    },
-  },
+  config       = function()
+    require("ui.bufferline")
+  end,
 }

@@ -26,7 +26,7 @@ require("plugins")        -- bootstrap your plugin manager (e.g. Lazy.nvim)
 -- ┌────────────────────────────────────────────────────────────────────────────┐
 -- │ 4) UI: all visual tweaks — colorscheme, statusline, bufferline, icons…    │
 -- └────────────────────────────────────────────────────────────────────────────┘
-require("ui")             -- loads lua/ui/init.lua, which in turn does:
+-- require("ui")             -- loads lua/ui/init.lua, which in turn does:
                           --   • ui.colors
                           --   • ui.statusline
                           --   • ui.bufferline

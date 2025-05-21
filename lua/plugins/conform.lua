@@ -1,10 +1,11 @@
 -- Plugin: conform.nvim
 -- Auto-format your code on save or via keybinding.
--- Loaded when a buffer is read or created.
+-- Pinned to v7.1.0 so it remains compatible with Neovim <0.10.
 
 return {
   "stevearc/conform.nvim",
-  event = { "BufReadPre", "BufNewFile" },
+  tag   = "v7.1.0",                            -- last version before Neovim 0.10 requirement
+  event = { "BufReadPre", "BufNewFile" },      -- load when a buffer is read or created
   config = function()
     local conform = require("conform")
     conform.setup({
