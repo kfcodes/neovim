@@ -1,36 +1,41 @@
--- Entry point for Neovim configuration:
--- 1. Core editor behavior (options, keymaps, autocmds)
--- 2. Plugin manager setup and plugin declarations
--- 3. LSP, DAP, linters and related tooling
--- 4. UI customizations (colorscheme, statusline, icons, etc.)
+-- lua/lsp/init.lua
+-- LSP, DAP, and formatter setup.
+-- 1) Bootstrap Mason to install language servers.
+-- 2) Define common handlers (keymaps, capabilities, diagnostics).
+-- 3) Wire up each server with default handlers.
+-- 4) Load any server-specific overrides.
 
 -- ┌────────────────────────────────────────────────────────────────────────────┐
--- │ 1) Core: fundamental editor settings                                     │
+-- │ 1) Mason: install & manage LSP servers                                     │
 -- └────────────────────────────────────────────────────────────────────────────┘
-require("core")           -- loads lua/core/init.lua, which in turn does:
-                          --   • core.options  (vim.opt & global vim.o settings)
-                          --   • core.keymaps  (all vim.keymap.set calls)
-                          --   • core.autocmds (autocommand groups)
+require("mason").setup()                                        -- core Mason setup
+require("mason-lspconfig").setup({                              -- bridge Mason → lspconfig
+  ensure_installed = { "pyright", "tsserver", "rust_analyzer" },-- servers to auto-install
+})
 
 -- ┌────────────────────────────────────────────────────────────────────────────┐
--- │ 2) Plugins: install and configure third-party extensions                  │
+-- │ 2) Common Handlers: shared on_attach & capabilities                       │
 -- └────────────────────────────────────────────────────────────────────────────┘
-require("plugins")        -- bootstrap your plugin manager (e.g. Lazy.nvim)
-                          -- and declare plugins + lazy-load rules
+--   on_attach: maps & commands that run when any LSP server attaches
+--   capabilities: extend client capabilities (e.g. completion)
+local handlers = require("lsp.handlers")
 
 -- ┌────────────────────────────────────────────────────────────────────────────┐
--- │ 3) LSP & Tooling: language servers, formatters, debuggers, etc.           │
+-- │ 3) Default Server Setup                                                   │
 -- └────────────────────────────────────────────────────────────────────────────┘
--- require("lsp")            -- sets up Mason, lspconfig handlers, and per-server configs
+-- Use Mason-lspconfig’s setup_handlers to apply the same setup to all servers
+require("mason-lspconfig").setup_handlers({
+  -- default handler for any server not explicitly overridden below
+  function(server_name)
+    require("lspconfig")[server_name].setup({
+      on_attach    = handlers.on_attach,
+      capabilities = handlers.capabilities,
+    })
+  end,
+})
 
 -- ┌────────────────────────────────────────────────────────────────────────────┐
--- │ 4) UI: all visual tweaks — colorscheme, statusline, bufferline, icons…    │
+-- │ 4) Server-specific Overrides                                               │
 -- └────────────────────────────────────────────────────────────────────────────┘
-require("ui")             -- loads lua/ui/init.lua, which in turn does:
-                          --   • ui.colors
-                          --   • ui.statusline
-                          --   • ui.bufferline
-                          --   • ui.indentline
-                          --   • ui.icons
-
--- End of init.lua — everything else lives in lua/{core,plugins,lsp,ui}/…
+-- Any custom settings for individual servers live in lua/lsp/servers.lua
+require("lsp.servers")
