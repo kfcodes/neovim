@@ -1,5 +1,3 @@
--- Configure your colorscheme plugin, here using tokyonight
-
 -- set custom colors before loading
 local bg        = "#011628"
 local bg_dark   = "#011423"

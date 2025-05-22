@@ -3,6 +3,13 @@
 -- disable mason-lspconfig’s built-in auto-enable, and then
 -- delegate to lua/lsp/init.lua for all on_attach & setup_handlers.
 
+-- ┌────────────────────────────────────────────────────────────────────────────┐
+-- │ 3) LSP & Tooling: language servers, formatters, debuggers, etc.           │
+-- └────────────────────────────────────────────────────────────────────────────┘
+-- require("lsp")            -- sets up Mason, lspconfig handlers, and per-server configs
+
+
+
 return {
   "neovim/nvim-lspconfig",
   { "neovim/nvim-lspconfig", tag = "v1.21.2" },  -- pin to the last 0.9-compatible release

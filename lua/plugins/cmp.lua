@@ -1,5 +1,6 @@
 -- Plugin: nvim-cmp + sources
 -- Auto-completion framework loaded on InsertEnter.
+-- Now with Tab/Shift-Tab navigation and CR confirm.
 
 return {
   "hrsh7th/nvim-cmp",
@@ -29,13 +30,11 @@ return {
         expand = function(args) luasnip.lsp_expand(args.body) end,
       },
       mapping = cmp.mapping.preset.insert({
-        ["<C-k>"] = cmp.mapping.select_prev_item(),
-        ["<C-j>"] = cmp.mapping.select_next_item(),
-        ["<C-b>"] = cmp.mapping.scroll_docs(-4),
-        ["<C-f>"] = cmp.mapping.scroll_docs(4),
-        ["<C-Space>"] = cmp.mapping.complete(),
-        ["<C-e>"] = cmp.mapping.abort(),
-        ["<CR>"] = cmp.mapping.confirm({ select = false }),
+        -- Tab moves to next item; Shift-Tab to previous
+        ["<Tab>"]   = cmp.mapping.select_next_item(),
+        ["<S-Tab>"] = cmp.mapping.select_prev_item(),
+        ["<CR>"]    = cmp.mapping.confirm({ select = true }),
+        -- Keep your other mappings if any…
       }),
       sources = cmp.config.sources({
         { name = "nvim_lsp" },

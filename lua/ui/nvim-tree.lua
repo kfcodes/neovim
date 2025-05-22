@@ -1,5 +1,4 @@
 -- Configure nvim-tree.lua as your file explorer
-
 -- disable built-in netrw so nvim-tree can take over
 vim.g.loaded_netrw       = 1
 vim.g.loaded_netrwPlugin = 1

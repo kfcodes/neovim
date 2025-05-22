@@ -6,6 +6,6 @@ return {
   "nvim-tree/nvim-tree.lua",
   dependencies = "nvim-tree/nvim-web-devicons",
   config       = function()
-    require("ui.tree")
+    require("ui.nvim-tree")
   end,
 }

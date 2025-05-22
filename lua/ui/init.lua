@@ -1,7 +1,8 @@
--- Aggregates all UI modules.
--- pull in colorscheme, statusline, explorer, dashboard, etc.
+-- ┌────────────────────────────────────────────────────────────────────────────┐
+-- │ all visual tweaks — colorscheme, statusline, bufferline, icons             │
+-- └────────────────────────────────────────────────────────────────────────────┘
 
-require("ui.colors")      -- colorscheme setup (e.g. tokyonight)
+require("ui.colors")      -- colorscheme setup
 require("ui.statusline")  -- lualine or other statusline config
 require("ui.bufferline")  -- buffer/tabline plugin
 require("ui.indentline")  -- indent guides (blankline)
