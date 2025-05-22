@@ -1,113 +1,104 @@
-vim.cmd("let g:netrw_liststyle = 3")
-local opt = vim.opt
+-- Central place for Neovim options. See `:help vim.opt`.
 
--- [[ Setting options ]]
--- See `:help vim.opt`
+-- shorthand
+local o   = vim.opt      -- global/vim options
+local wo  = vim.wo       -- window-scoped options
+local bo  = vim.bo       -- buffer-scoped options
+local g   = vim.g        -- global vim variables
 
--- Make line numbers default
-vim.opt.number = true
--- You can also add relative line numbers, for help with jumping.
---  Experiment for yourself to see if you like it!
--- vim.opt.relativenumber = true
+-- ─── Basics ────────────────────────────────────────────────────────────────────
 
--- Enable mouse mode, can be useful for resizing splits for example!
-vim.opt.mouse = 'a'
+o.number          = true     -- show absolute line number
+o.relativenumber  = true     -- show relative numbers for easy motions
+o.cursorline      = true     -- highlight the current line
+o.signcolumn      = 'yes'    -- always show signcolumn so text doesn't shift
+o.termguicolors   = true     -- true color support
+o.background      = 'dark'   -- tell colorschemes to use dark variants
 
--- Don't show the mode, since it's already in status line
-vim.opt.showmode = false
+o.showmode        = false    -- don't show -- INSERT -- etc. (statusline covers it)
+o.breakindent     = true     -- maintain indent on wrapped lines
 
--- Sync clipboard between OS and Neovim.
---  Remove this option if you want your OS clipboard to remain independent.
---  See `:help 'clipboard'`
-vim.opt.clipboard = 'unnamedplus'
+-- ─── Indentation & Tabs ───────────────────────────────────────────────────────
 
--- Enable break indent
-vim.opt.breakindent = true
+o.expandtab       = true     -- use spaces instead of tabs
+o.tabstop         = 2        -- number of spaces per Tab
+o.shiftwidth      = 2        -- number of spaces to use for autoindent
+o.smartindent     = true     -- smart auto-indent new lines
+o.autoindent      = true     -- copy indent from current line
 
--- Save undo history
-vim.opt.undofile = true
+-- ─── Wrapping ─────────────────────────────────────────────────────────────────
 
--- Case-insensitive searching UNLESS \C or capital in search
-vim.opt.ignorecase = true
-vim.opt.smartcase = true
+o.wrap            = false    -- disable line wrap by default
+o.linebreak       = true     -- wrap at word boundaries when wrap is on
 
--- Keep signcolumn on by default
-vim.opt.signcolumn = 'yes'
+-- ─── Search ───────────────────────────────────────────────────────────────────
 
--- Decrease update time
-vim.opt.updatetime = 250
-vim.opt.timeoutlen = 300
+o.ignorecase      = true     -- case-insensitive search…
+o.smartcase       = true     -- …unless expression contains uppercase
+o.incsearch       = true     -- show search matches as you type
+o.hlsearch        = false    -- disable highlight of all matches by default
 
--- Configure how new splits should be opened
-vim.opt.splitright = true
-vim.opt.splitbelow = true
+-- ─── Splits & Windows ─────────────────────────────────────────────────────────
 
--- Sets how neovim will display certain whitespace in the editor.
---  See `:help 'list'`
---  and `:help 'listchars'`
-vim.opt.list = true
-vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
+o.splitright      = true     -- vertical splits go to the right
+o.splitbelow      = true     -- horizontal splits go below
+o.scrolloff       = 10       -- keep 10 lines visible above/below cursor
+o.sidescrolloff   = 8        -- keep 8 columns visible left/right of cursor
 
--- Preview substitutions live, as you type!
-vim.opt.inccommand = 'split'
+-- ─── Mouse & Clipboard ────────────────────────────────────────────────────────
 
--- Show which line your cursor is on
-vim.opt.cursorline = true
+o.mouse           = 'a'      -- enable mouse in all modes
+o.clipboard       = 'unnamedplus'  -- use system clipboard by default
 
--- Minimal number of screen lines to keep above and below the cursor.
-vim.opt.scrolloff = 10
+-- ─── File Handling & Undo ─────────────────────────────────────────────────────
+
+o.undofile        = true     -- persist undo history
+o.backup          = false    -- no backup files
+o.swapfile        = false    -- no swapfile
+o.backspace       = 'indent,eol,start'  -- backspace over autoindent, eol, start
+o.updatetime      = 250      -- faster CursorHold & swap writes
+o.timeoutlen      = 300      -- time to wait for a mapped sequence
+
+-- ─── UI Tweaks ────────────────────────────────────────────────────────────────
+
+o.list            = true     -- show whitespace characters
+o.listchars       = { tab = '» ', trail = '·', nbsp = '␣' }
+o.inccommand      = 'split'  -- live preview of substitute in split
+o.cmdheight       = 1        -- space for command-line messages
+o.ruler           = false    -- disable ruler (shown in statusline)
+
+-- ─── Performance ───────────────────────────────────────────────────────────────
+
+o.lazyredraw      = true     -- don't redraw while executing macros
+o.synmaxcol       = 200      -- stop syntax highlighting after this column
+
+-- ─── Messaging ─────────────────────────────────────────────────────────────────
+
+o.shortmess:append("c")       -- don't show “match 1 of 2” messages
+
+-- ─── Window Title & Status ─────────────────────────────────────────────────────
+
+o.title           = true     -- set terminal title to current file
+o.titlestring     = "%f – NVIM"
+
+-- ─── Fill Characters ───────────────────────────────────────────────────────────
+
+o.fillchars       = {
+  vert = "┃",    -- vertical split line
+  eob  = " ",    -- hide ~ on empty lines
+  fold = "·",    -- filler for closed folds
+}
+
+-- ─── Cursor Shapes ──────────────────────────────────────────────────────────────
+
+o.guicursor       = {
+  n = "n-v-c:block",   -- normal, visual, command modes: block
+  i = "i-ci-ve:ver25", -- insert : vertical bar, 25% width
+  r = "r-cr:hor20",    -- replace : horizontal bar, 20% height
+}
+
+-- ─── Netrw (optional) ─────────────────────────────────────────────────────────
+
+g.netrw_liststyle = 3        -- tree-style file browser
 
 -- vim: ts=2 sts=2 sw=2 et
-
-opt.number = true       -- Show line numbers
-opt.relativenumber = true
-opt.tabstop = 4         -- Set tab width
-opt.shiftwidth = 4
-opt.expandtab = true    -- Use spaces instead of tabs
-opt.smartindent = true  -- Auto indent new lines
-opt.wrap = false        -- Disable line wrapping
-opt.termguicolors = true -- Enable colors in terminal
-opt.splitright = true   -- Vertical split to the right
-opt.splitbelow = true   -- Horizontal split below
-local opt = vim.opt -- for conciseness
-
--- line numbers
-opt.relativenumber = true -- show relative line numbers
-opt.number = true -- shows absolute line number on cursor line (when relative number is on)
-
--- tabs & indentation
-opt.tabstop = 2 -- 2 spaces for tabs (prettier default)
-opt.shiftwidth = 2 -- 2 spaces for indent width
-opt.expandtab = true -- expand tab to spaces
-opt.autoindent = true -- copy indent from current line when starting new one
-
--- line wrapping
-opt.wrap = false -- disable line wrapping
-
--- search settings
-opt.ignorecase = true -- ignore case when searching
-opt.smartcase = true -- if you include mixed case in your search, assumes you want case-sensitive
-
--- cursor line
-opt.cursorline = true -- highlight the current cursor line
-
--- appearance
-
--- turn on termguicolors for nightfly colorscheme to work
--- (have to use iterm2 or any other true color terminal)
-opt.termguicolors = true
-opt.background = "dark" -- colorschemes that can be light or dark will be made dark
-opt.signcolumn = "yes" -- show sign column so that text doesn't shift
-
--- backspace
-opt.backspace = "indent,eol,start" -- allow backspace on indent, end of line or insert mode start position
-
--- clipboard
-opt.clipboard:append("unnamedplus") -- use system clipboard as default register
-
--- split windows
-opt.splitright = true -- split vertical window to the right
-opt.splitbelow = true -- split horizontal window to the bottom
-
--- turn off swapfile
-opt.swapfile = false

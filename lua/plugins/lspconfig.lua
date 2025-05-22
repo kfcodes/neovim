@@ -1,64 +1,67 @@
+-- lua/plugins/lspconfig.lua
 -- Plugin: nvim-lspconfig + Mason + extra LSP tooling
--- We declare the servers & tools we want installed (via opts),
--- disable mason-lspconfig’s built-in auto-enable, and then
--- delegate to lua/lsp/init.lua for all on_attach & setup_handlers.
-
--- ┌────────────────────────────────────────────────────────────────────────────┐
--- │ 3) LSP & Tooling: language servers, formatters, debuggers, etc.           │
--- └────────────────────────────────────────────────────────────────────────────┘
--- require("lsp")            -- sets up Mason, lspconfig handlers, and per-server configs
-
-
+-- Installs & manages your LSP servers, formatters, and helpers,
+-- then delegates actual server setup to lua/lsp/init.lua.
 
 return {
-  "neovim/nvim-lspconfig",
-  { "neovim/nvim-lspconfig", tag = "v1.21.2" },  -- pin to the last 0.9-compatible release
-  event = { "BufReadPre", "BufNewFile" },
+	"neovim/nvim-lspconfig",
+	branch = "master", -- pin to the repo’s master branch (where the code actually lives)
+	event = { "BufReadPre", "BufNewFile" },
 
-  dependencies = {
-    -- Mason core installer
-    { "williamboman/mason.nvim", opts = {
-        ui = {
-          icons = {
-            package_installed   = "✓",
-            package_pending     = "➜",
-            package_uninstalled = "✗",
-          },
-        },
-      },
-    },
+	-- Dependencies are available on the runtime path before config()
+	dependencies = {
+		-- 1) Mason core: manage external LSP servers, linters, formatters
+		{
+			"williamboman/mason.nvim",
+			opts = {
+				ui = {
+					icons = {
+						package_installed = "✓",
+						package_pending = "➜",
+						package_uninstalled = "✗",
+					},
+				},
+			},
+		},
 
-    -- Mason-LSP bridge, with our desired servers
-    {
-      "mason-org/mason-lspconfig.nvim",
-      opts = {
-        ensure_installed  = {
-          "pyright", "rust_analyzer",
-          "html", "cssls", "tailwindcss", "svelte",
-          "lua_ls", "graphql", "emmet_ls", "prismals",
-        },
-        automatic_enable  = false,  -- ⚠ disable broken auto-enable
-      },
-    },
+		-- 2) Mason-LSP bridge: install & register servers, but don’t auto-enable them
+		{
+			"williamboman/mason-lspconfig.nvim",
+			opts = {
+				ensure_installed = {
+					"pyright",
+					"rust_analyzer",
+					"html",
+					"cssls",
+					"tailwindcss",
+					"svelte",
+					"lua_ls",
+					"graphql",
+					"emmet_ls",
+					"prismals",
+				},
+				automatic_installation = true, -- auto-install & auto-setup all ensured servers
+			},
+		},
 
-    -- Mason tool installer for formatters & linters
-    {
-      "WhoIsSethDaniel/mason-tool-installer.nvim",
-      opts = {
-        ensure_installed = { "prettier", "stylua", "black", "isort", "eslint_d", "pylint" },
-      },
-    },
+		-- 3) Mason tool installer: ensure formatters & linters are present
+		{
+			"WhoIsSethDaniel/mason-tool-installer.nvim",
+			opts = {
+				ensure_installed = { "prettier", "stylua", "black", "isort", "eslint_d", "pylint" },
+			},
+		},
 
-    -- LSP → CMP integration
-    "hrsh7th/cmp-nvim-lsp",
+		-- 4) LSP → nvim-cmp integration
+		"hrsh7th/cmp-nvim-lsp",
 
-    -- Extra helpers
-    { "antosha417/nvim-lsp-file-operations", config = true },
-    { "folke/neodev.nvim",                opts   = {} },
-  },
+		-- 5) Extra LSP helpers
+		{ "antosha417/nvim-lsp-file-operations", config = true },
+		{ "folke/neodev.nvim", opts = {} },
+	},
 
-  config = function()
-    -- All dependencies are on the rtp now; hand off to your lsp module.
-    require("lsp")
-  end,
+	-- At this point all deps are on &rtp; hand off to your lsp module
+	config = function()
+		require("lsp")
+	end,
 }

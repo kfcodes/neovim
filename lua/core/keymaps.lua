@@ -1,100 +1,88 @@
--- [[ Basic Keymaps ]]
---  See `:help vim.keymap.set()`
+-- Central place for all custom keybindings. See `:help vim.keymap.set()`.
 
--- Set highlight on search, but clear on pressing <Esc> in normal mode
-vim.opt.hlsearch = true
-vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
+-- shorthand
+local map = vim.keymap.set
+local opt = { noremap = true, silent = true }
 
--- Diagnostic keymaps
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous [D]iagnostic message' })
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next [D]iagnostic message' })
-vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show diagnostic [E]rror messages' })
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
+-- ─── Leader Key ────────────────────────────────────────────────────────────────
 
--- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
--- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
--- is not what someone will guess without a bit more experience.
---
--- NOTE: This won't work in all terminal emulators/tmux/etc. Try your own mapping
--- or just use <C-\><C-n> to exit terminal mode
-vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
+vim.g.mapleader = " "  -- set <Space> as the leader key
 
--- TIP: Disable arrow keys in normal mode
--- vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
--- vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
--- vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
--- vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
+-- ─── General ──────────────────────────────────────────────────────────────────
 
--- Keybinds to make split navigation easier.
---  Use CTRL+<hjkl> to switch between windows
---
---  See `:help wincmd` for a list of all window commands
-vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
-vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
-vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
-vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
+-- Exit insert mode quickly by pressing 'jk'
+map("i", "jk", "<ESC>", { desc = "Exit insert mode with jk" })
 
--- [[ Basic Autocommands ]]
---  See `:help lua-guide-autocommands`
+-- Save & quit
+map("n", "<leader>w", ":w<CR>",    { desc = "Save file", silent = true })
+map("n", "<leader>q", ":q<CR>",    { desc = "Quit window", silent = true })
+map("n", "<leader>W", ":wq<CR>",   { desc = "Save & quit", silent = true })
 
--- Highlight when yanking (copying) text
---  Try it with `yap` in normal mode
---  See `:help vim.highlight.on_yank()`
-vim.api.nvim_create_autocmd('TextYankPost', {
-  desc = 'Highlight when yanking (copying) text',
-  group = vim.api.nvim_create_augroup('kickstart-highlight-yank', { clear = true }),
-  callback = function()
-    vim.highlight.on_yank()
-  end,
-})
+-- Clear search highlights with <Leader>nh
+map("n", "<leader>nh", ":nohlsearch<CR>", { desc = "Clear search highlights", silent = true })
+
+-- Increment/decrement numbers
+map("n", "<leader>+", "<C-a>", { desc = "Increment number", silent = true })
+map("n", "<leader>-", "<C-x>", { desc = "Decrement number", silent = true })
+
+-- Text manipulation (case toggles)
+map("v", "<leader>u", "gU", { desc = "Uppercase selection" })
+map("v", "<leader>l", "gu", { desc = "Lowercase selection" })
+
+-- ─── Window & Tab Navigation ───────────────────────────────────────────────────
+
+-- Move between windows with Ctrl+{h,j,k,l}
+map("n", "<C-h>", "<C-w>h", { desc = "Move to left window" })
+map("n", "<C-j>", "<C-w>j", { desc = "Move to lower window" })
+map("n", "<C-k>", "<C-w>k", { desc = "Move to upper window" })
+map("n", "<C-l>", "<C-w>l", { desc = "Move to right window" })
+
+-- Split windows
+map("n", "<leader>sv", "<C-w>v", { desc = "Split window vertically" })
+map("n", "<leader>sh", "<C-w>s", { desc = "Split window horizontally" })
+map("n", "<leader>se", "<C-w>=", { desc = "Make splits equal size" })
+map("n", "<leader>sx", ":close<CR>", { desc = "Close current split", silent = true })
+
+-- Tab management
+map("n", "<leader>to", ":tabnew<CR>",    { desc = "Open new tab", silent = true })
+map("n", "<leader>tf", ":tabnew %<CR>",  { desc = "Open buffer in new tab", silent = true })
+map("n", "<leader>tn", ":tabnext<CR>",   { desc = "Go to next tab", silent = true })
+map("n", "<leader>tp", ":tabprevious<CR>", { desc = "Go to previous tab", silent = true })
+map("n", "<leader>tx", ":tabclose<CR>",  { desc = "Close current tab", silent = true })
+
+-- ─── File & Buffer Navigation ─────────────────────────────────────────────────
+
+-- Open file explorer with <Leader>pv
+map("n", "<leader>pv", ":Ex<CR>", { desc = "Open file explorer", silent = true })
+
+-- Buffer delete
+map("n", "<leader>bd", ":bd<CR>", { desc = "Delete current buffer", silent = true })
+
+-- ─── Terminal ─────────────────────────────────────────────────────────────────
+
+-- Exit terminal mode with Esc Esc
+map("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode", silent = true })
+
+-- ─── Diagnostics ───────────────────────────────────────────────────────────────
+
+map("n", "[d", vim.diagnostic.goto_prev,    { desc = "Go to previous diagnostic" })
+map("n", "]d", vim.diagnostic.goto_next,    { desc = "Go to next diagnostic" })
+map("n", "<leader>e", vim.diagnostic.open_float, { desc = "Show diagnostics in float" })
+map("n", "<leader>qf", vim.diagnostic.setloclist, { desc = "Send diagnostics to loclist" })
+
+-- ─── LSP Actions ───────────────────────────────────────────────────────────────
+
+map("n", "gd", vim.lsp.buf.definition,      { desc = "Go to definition" })
+map("n", "gr", vim.lsp.buf.references,      { desc = "List references" })
+map("n", "gi", vim.lsp.buf.implementation,  { desc = "Go to implementation" })
+map("n", "K",  vim.lsp.buf.hover,           { desc = "Hover documentation" })
+map("n", "<leader>rn", vim.lsp.buf.rename,  { desc = "Rename symbol" })
+map("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code action" })
+
+-- ─── Surround & Substitute Operators ───────────────────────────────────────────
+
+map("n", "ys", "<Plug>Ysurround",           { desc = "Add surrounding" })
+map("n", "ds", "<Plug>Dsurround",           { desc = "Delete surrounding" })
+map("n", "cs", "<Plug>Csurround",           { desc = "Change surrounding" })
 
 -- vim: ts=2 sts=2 sw=2 et
-local map = vim.keymap.set
-
--- Leader Key
-vim.g.mapleader = " "
-
--- File Navigation
-map("n", "<leader>pv", ":Ex<CR>", { noremap = true, silent = true })
-
--- Window Navigation
-map("n", "<C-h>", "<C-w>h")
-map("n", "<C-l>", "<C-w>l")
-map("n", "<C-j>", "<C-w>j")
-map("n", "<C-k>", "<C-w>k")
-
--- Buffer Management
-map("n", "<leader>bd", ":bd<CR>", { noremap = true, silent = true })
-
--- set leader key to space
-vim.g.mapleader = " "
-
-local keymap = vim.keymap -- for conciseness
-
----------------------
--- General Keymaps -------------------
-
--- use jk to exit insert mode
-keymap.set("i", "jk", "<ESC>", { desc = "Exit insert mode with jk" })
-
--- clear search highlights
-keymap.set("n", "<leader>nh", ":nohl<CR>", { desc = "Clear search highlights" })
-
--- delete single character without copying into register
--- keymap.set("n", "x", '"_x')
-
--- increment/decrement numbers
-keymap.set("n", "<leader>+", "<C-a>", { desc = "Increment number" }) -- increment
-keymap.set("n", "<leader>-", "<C-x>", { desc = "Decrement number" }) -- decrement
-
--- window management
-keymap.set("n", "<leader>sv", "<C-w>v", { desc = "Split window vertically" }) -- split window vertically
-keymap.set("n", "<leader>sh", "<C-w>s", { desc = "Split window horizontally" }) -- split window horizontally
-keymap.set("n", "<leader>se", "<C-w>=", { desc = "Make splits equal size" }) -- make split windows equal width & height
-keymap.set("n", "<leader>sx", "<cmd>close<CR>", { desc = "Close current split" }) -- close current split window
-
-keymap.set("n", "<leader>to", "<cmd>tabnew<CR>", { desc = "Open new tab" }) -- open new tab
-keymap.set("n", "<leader>tx", "<cmd>tabclose<CR>", { desc = "Close current tab" }) -- close current tab
-keymap.set("n", "<leader>tn", "<cmd>tabn<CR>", { desc = "Go to next tab" }) --  go to next tab
-keymap.set("n", "<leader>tp", "<cmd>tabp<CR>", { desc = "Go to previous tab" }) --  go to previous tab
-keymap.set("n", "<leader>tf", "<cmd>tabnew %<CR>", { desc = "Open current buffer in new tab" }) --  move current buffer to new tab

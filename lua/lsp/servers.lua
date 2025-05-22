@@ -1,16 +1,41 @@
--- Per-server custom overrides. Any server you don’t need to tweak can be omitted.
+-- lua/lsp/servers.lua
+-- Custom settings for individual servers. The keys here must match
+-- the names used by mason-lspconfig (e.g. "lua_ls", "graphql", etc).
 
 return {
-  -- Example: special settings for clangd
-  clangd = {
-    cmd = { "clangd", "--background-index" },
-    filetypes = { "c", "cpp", "objc" },
-  },
+	-- Svelte: patch its on_attach again and watch JS/TS files
+	svelte = {
+		on_attach = function(client, bufnr)
+			require("lsp.handlers").on_attach(client, bufnr)
+			vim.api.nvim_create_autocmd("BufWritePost", {
+				buffer = bufnr,
+				pattern = { "*.js", "*.ts" },
+				callback = function(ctx)
+					client.notify("$/onDidChangeTsOrJsFile", { uri = ctx.match })
+				end,
+			})
+		end,
+	},
 
-  -- Example: override tsserver root detection
-  tsserver = {
-    root_dir = require("lspconfig.util").root_pattern("package.json", "tsconfig.json", ".git"),
-  },
+	-- GraphQL: support extra filetypes
+	graphql = {
+		filetypes = { "graphql", "gql", "svelte", "typescriptreact", "javascriptreact" },
+	},
 
-  -- …add more…
+	-- Emmet: HTML/CSS-like filetypes
+	emmet_ls = {
+		filetypes = { "html", "typescriptreact", "javascriptreact", "css", "sass", "scss", "less", "svelte" },
+	},
+
+	-- Lua LS: recognize 'vim' global and enable snippet replace
+	lua_ls = {
+		settings = {
+			Lua = {
+				diagnostics = { globals = { "vim" } },
+				completion = { callSnippet = "Replace" },
+			},
+		},
+	},
+
+	-- Add more servers here if you need...
 }
