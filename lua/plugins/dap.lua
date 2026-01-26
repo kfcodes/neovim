@@ -1,64 +1,103 @@
--- Plugin: nvim-dap + UI + Mason integration + python/go adapters
--- Full debugging workflow: adapters, UI, keymaps.
+-- Plugin: nvim-dap + UI + Mason integration + Python & Go adapters
+-- Sets up debug adapters, a nice UI, and useful keymaps.
 
 return {
-  "mfussenegger/nvim-dap",
-  dependencies = {
-    "rcarriga/nvim-dap-ui",             -- prettier UI for dap
-    "williamboman/mason.nvim",          -- manage external tools
-    "jay-babu/mason-nvim-dap.nvim",     -- install debug adapters via Mason
-    "leoluz/nvim-dap-go",               -- Go DAP adapter
-    "mfussenegger/nvim-dap-python",     -- Python DAP adapter
-  },
-  config = function()
-    local dap       = require("dap")
-    local dapui     = require("dapui")
-    local mason_dap = require("mason-nvim-dap")
+	"mfussenegger/nvim-dap",
+	dependencies = {
+		-- 1) A prettier UI for nvim-dap, requires nvim-nio for async I/O
+		{
+			"rcarriga/nvim-dap-ui",
+			dependencies = { "nvim-neotest/nvim-nio" },
+			config = function()
+				local dap = require("dap")
+				local dapui = require("dapui")
 
-    -- 1) Install & configure adapters via Mason
-    mason_dap.setup({
-      ensure_installed = { "delve", "debugpy" },
-      automatic_setup = true,
-      handlers = {}, -- you can override adapter settings here
-    })
+				-- Configure the dap-ui layout and icons
+				dapui.setup({
+					icons = { expanded = "▾", collapsed = "▸", current_frame = "*" },
+					controls = {
+						icons = {
+							pause = "⏸",
+							play = "▶",
+							step_into = "⏎",
+							step_over = "⏭",
+							step_out = "⏮",
+							run_last = "▶▶",
+							terminate = "⏹",
+							disconnect = "⏏",
+						},
+					},
+				})
 
-    -- 2) UI setup
-    dapui.setup({
-      icons = { expanded = "▾", collapsed = "▸", current_frame = "*" },
-      controls = {
-        icons = {
-          pause        = "⏸",
-          play         = "▶",
-          step_into    = "⏎",
-          step_over    = "⏭",
-          step_out     = "⏮",
-          run_last     = "▶▶",
-          terminate    = "⏹",
-          disconnect   = "⏏",
-        },
-      },
-    })
+				-- Open UI when debugging starts, close when it ends
+				dap.listeners.after.event_initialized["dapui_open"] = dapui.open
+				dap.listeners.before.event_terminated["dapui_close"] = dapui.close
+				dap.listeners.before.event_exited["dapui_close"] = dapui.close
+			end,
+		},
 
-    -- 3) Open/close hooks
-    dap.listeners.after.event_initialized["dapui_open"]  = dapui.open
-    dap.listeners.before.event_terminated["dapui_close"] = dapui.close
-    dap.listeners.before.event_exited["dapui_close"]     = dapui.close
+		-- 2) Mason: manage and install debug adapters
+		{
+			"williamboman/mason.nvim",
+			opts = {
+				ui = {
+					icons = {
+						package_installed = "✓",
+						package_pending = "➜",
+						package_uninstalled = "✗",
+					},
+				},
+			},
+		},
+		{
+			"jay-babu/mason-nvim-dap.nvim",
+			config = function()
+				-- Ensure delve (Go) and debugpy (Python) are installed, auto-setup them
+				require("mason-nvim-dap").setup({
+					ensure_installed = { "delve", "debugpy" },
+					automatic_setup = true,
+				})
+			end,
+		},
 
-    -- 4) Python adapter (debugpy)
-    require("dap-python").setup("~/.virtualenvs/debugpy/bin/python")
+		-- 3) Python adapter: debugpy integration
+		{
+			"mfussenegger/nvim-dap-python",
+			ft = "python",
+			config = function()
+				-- Setup debugpy adapter; if you use a venv, pass its python path:
+				-- require("dap-python").setup("~/.virtualenvs/myenv/bin/python")
+				require("dap-python").setup()
+			end,
+		},
 
-    -- 5) Keymaps for debugging
-    local km = vim.keymap.set
-    km("n", "<F5>",     dap.continue,       { desc = "Debug: Start/Continue" })
-    km("n", "<F1>",     dap.step_into,      { desc = "Debug: Step Into" })
-    km("n", "<F2>",     dap.step_over,      { desc = "Debug: Step Over" })
-    km("n", "<F3>",     dap.step_out,       { desc = "Debug: Step Out" })
-    km("n", "<leader>b", dap.toggle_breakpoint, { desc = "Debug: Toggle Breakpoint" })
-    km("n", "<leader>B", function() dap.set_breakpoint(vim.fn.input "Breakpoint condition: ") end,
-       { desc = "Debug: Set Conditional Breakpoint" })
-    km("n", "<F7>",     dapui.toggle,       { desc = "Debug: Toggle DAP UI" })
+		-- 4) Go adapter: Delve integration
+		{
+			"leoluz/nvim-dap-go",
+			ft = "go",
+			config = function()
+				require("dap-go").setup()
+			end,
+		},
+	},
 
-    -- 6) Go adapter
-    require("dap-go").setup()
-  end,
+	-- 5) Global nvim-dap keymaps
+	config = function()
+		local dap = require("dap")
+		local km = vim.keymap.set
+
+		-- Start / continue
+		km("n", "<F5>", dap.continue, { desc = "Debug: Continue" })
+		-- Stepping
+		km("n", "<F1>", dap.step_into, { desc = "Debug: Step Into" })
+		km("n", "<F2>", dap.step_over, { desc = "Debug: Step Over" })
+		km("n", "<F3>", dap.step_out, { desc = "Debug: Step Out" })
+		-- Breakpoints
+		km("n", "<leader>b", dap.toggle_breakpoint, { desc = "Debug: Toggle Breakpoint" })
+		km("n", "<leader>B", function()
+			dap.set_breakpoint(vim.fn.input("Breakpoint condition: "))
+		end, { desc = "Debug: Set Conditional Breakpoint" })
+		-- UI toggle
+		km("n", "<F7>", require("dapui").toggle, { desc = "Debug: Toggle UI" })
+	end,
 }

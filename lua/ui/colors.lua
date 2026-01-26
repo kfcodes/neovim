@@ -1,32 +1,30 @@
--- set custom colors before loading
-local bg        = "#011628"
-local bg_dark   = "#011423"
-local bg_high   = "#143652"
+local bg = "#011628"
+local bg_dark = "#011423"
+local bg_high = "#143652"
 local bg_search = "#0A64AC"
-local bg_vis    = "#275378"
-local fg        = "#CBE0F0"
-local fg_dark   = "#B4D0E9"
+local bg_vis = "#275378"
+local fg = "#CBE0F0"
+local fg_dark = "#B4D0E9"
 local fg_gutter = "#627E97"
-local border    = "#547998"
+local border = "#547998"
 
 require("tokyonight").setup({
-  style = "night",
-  on_colors = function(colors)
-    colors.bg            = bg
-    colors.bg_dark       = bg_dark
-    colors.bg_float      = bg_dark
-    colors.bg_highlight  = bg_high
-    colors.bg_search     = bg_search
-    colors.bg_popup      = bg_dark
-    colors.bg_sidebar    = bg_dark
-    colors.bg_statusline = bg_dark
-    colors.bg_visual     = bg_vis
-    colors.border        = border
-    colors.fg            = fg
-    colors.fg_dark       = fg_dark
-    colors.fg_gutter     = fg_gutter
-  end,
+	style = "night",
+	on_colors = function(colors)
+		colors.bg = bg
+		colors.bg_dark = bg_dark
+		colors.bg_float = bg_dark
+		colors.bg_highlight = bg_high
+		colors.bg_search = bg_search
+		colors.bg_popup = bg_dark
+		colors.bg_sidebar = bg_dark
+		colors.bg_statusline = bg_dark
+		colors.bg_visual = bg_vis
+		colors.border = border
+		colors.fg = fg
+		colors.fg_dark = fg_dark
+		colors.fg_gutter = fg_gutter
+	end,
 })
 
--- actually apply the scheme
 vim.cmd([[colorscheme tokyonight]])

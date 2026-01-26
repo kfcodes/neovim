@@ -1,8 +1,3 @@
--- Entry for “core” settings:
---  • options: global & window options like tabstop, number, relativenumber, etc.
---  • keymaps: custom key bindings
---  • autocmds: autocommand groups for filetype setups, yank-highlighting, etc.
-
-require("core.options")
-require("core.keymaps")
-require("core.autocmds")
+require("core.options") -- global & window options like tabstop, number, relativenumber
+require("core.keymaps") -- custom key bindings
+require("core.autocmds") -- autocommand groups for filetype setups, yank-highlighting

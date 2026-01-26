@@ -1,5 +1,3 @@
--- Orchestrates Neodev, diagnostic signs, Mason-LSPConfig, and per-server overrides.
-
 -- ─── 1) Neodev: make ‘lua’ development seamless (e.g. recognize runtime files)
 require("neodev").setup({})
 
@@ -21,13 +19,8 @@ end
 local mlsp = require("mason-lspconfig")
 local servers = require("lsp.servers") -- from lua/lsp/servers.lua
 
--- `opts = { ensure_installed = { … } }` came from your plugin spec,
--- so here we just pass our `handlers` table:
 mlsp.setup({
-	-- Handlers: first entry is the default for *any* server,
-	-- and then we merge in any per-server overrides from `servers.lua`.
 	handlers = vim.tbl_extend("force", {
-		-- Default handler for all servers
 		function(server_name)
 			require("lspconfig")[server_name].setup({
 				on_attach = handlers.on_attach,

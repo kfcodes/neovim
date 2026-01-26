@@ -48,7 +48,7 @@ return {
 		{
 			"WhoIsSethDaniel/mason-tool-installer.nvim",
 			opts = {
-				ensure_installed = { "prettier", "stylua", "black", "isort", "eslint_d", "pylint" },
+				ensure_installed = { "prettier", "stylua", "black", "isort", "eslint_d", "pylint", "flake8", "mypy" },
 			},
 		},
 
