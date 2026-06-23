@@ -1,45 +1,90 @@
+-- lua/plugins/conform.lua
 -- Plugin: conform.nvim
--- Auto-format your code on save or via keybinding.
--- Pinned to v7.1.0 so it remains compatible with Neovim <0.10.
+-- Lightweight formatter integration with format-on-save.
+--
+-- Responsibilities:
+-- - Choose formatters by filetype.
+-- - Format automatically on save.
+-- - Fall back to LSP formatting when no external formatter is configured.
+--
+-- Formatter choices:
+-- - Python: black
+-- - Lua: stylua
+-- - Shell/env/conf-style files: shfmt where useful
+-- - Web/JSON: prettier
 
 return {
-  "stevearc/conform.nvim",
-  tag   = "v7.1.0",                            -- last version before Neovim 0.10 requirement
-  event = { "BufReadPre", "BufNewFile" },      -- load when a buffer is read or created
-  config = function()
-    local conform = require("conform")
-    conform.setup({
-      formatters_by_ft = {
-        javascript       = { "prettier" },
-        typescript       = { "prettier" },
-        javascriptreact  = { "prettier" },
-        typescriptreact  = { "prettier" },
-        svelte           = { "prettier" },
-        css              = { "prettier" },
-        html             = { "prettier" },
-        json             = { "prettier" },
-        yaml             = { "prettier" },
-        markdown         = { "prettier" },
-        graphql          = { "prettier" },
-        liquid           = { "prettier" },
-        lua              = { "stylua"   },
-        python           = { "isort", "black" },
-      },
-      format_on_save = {
-        lsp_fallback = true,
-        async        = false,
-        timeout_ms   = 1000,
-      },
-    })
+	"stevearc/conform.nvim",
 
-    -- Keymap to manually format
-    vim.keymap.set(
-      { "n", "v" },
-      "<leader>mp",
-      function()
-        require("conform").format({ lsp_fallback = true, async = false, timeout_ms = 1000 })
-      end,
-      { desc = "Format file or range" }
-    )
-  end,
+	event = { "BufReadPre", "BufNewFile" },
+	cmd = { "ConformInfo" },
+
+	keys = {
+		{
+			"<leader>cf",
+			function()
+				require("conform").format({
+					async = true,
+					lsp_format = "fallback",
+				})
+			end,
+			mode = { "n", "v" },
+			desc = "Format file or selection",
+		},
+	},
+
+	opts = {
+		formatters_by_ft = {
+			-- Lua
+			lua = { "stylua" },
+
+			-- Python
+			python = { "black" },
+
+			-- Web
+			html = { "prettier" },
+			css = { "prettier" },
+			scss = { "prettier" },
+			less = { "prettier" },
+			javascript = { "prettier" },
+			javascriptreact = { "prettier" },
+			typescript = { "prettier" },
+			typescriptreact = { "prettier" },
+
+			-- JSON
+			json = { "prettier" },
+			jsonc = { "prettier" },
+
+			-- Shell
+			sh = { "shfmt" },
+			bash = { "shfmt" },
+			zsh = { "shfmt" },
+
+			-- Config-style files.
+			-- Many .conf files have different syntaxes, so we do not force a universal formatter.
+			-- LSP fallback below can handle these if an attached LSP supports formatting.
+			conf = {},
+
+			-- .env files are usually simple KEY=value files.
+			-- Do not run prettier/black/shfmt on them.
+			dotenv = {},
+		},
+
+		format_on_save = function(bufnr)
+			local disabled_filetypes = {
+				-- Keep env files untouched on save.
+				dotenv = true,
+			}
+
+			local ft = vim.bo[bufnr].filetype
+			if disabled_filetypes[ft] then
+				return nil
+			end
+
+			return {
+				timeout_ms = 3000,
+				lsp_format = "fallback",
+			}
+		end,
+	},
 }

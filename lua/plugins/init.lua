@@ -1,6 +1,9 @@
--- 1) Bootstrap Lazy.nvim
+-- lua/plugins/init.lua
+-- Bootstraps lazy.nvim and then loads all plugin specs from lua/plugins/*.lua
+
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.loop.fs_stat(lazypath) then
+
+if not vim.uv.fs_stat(lazypath) then
 	vim.fn.system({
 		"git",
 		"clone",
@@ -10,26 +13,24 @@ if not vim.loop.fs_stat(lazypath) then
 		lazypath,
 	})
 end
+
 vim.opt.rtp:prepend(lazypath)
 
--- 2) Discover every plugin spec in this folder
-local plugin_files = vim.fn.globpath(vim.fn.stdpath("config") .. "/lua/plugins", "*.lua", false, true)
-local plugins = {}
-for _, path in ipairs(plugin_files) do
-	local name = path:match("lua/plugins/(.+)%.lua$")
-	if name and name ~= "init" then
-		local spec = require("plugins." .. name)
-		-- normalize single-table or list:
-		if vim.tbl_islist(spec) then
-			vim.list_extend(plugins, spec)
-		else
-			table.insert(plugins, spec)
-		end
-	end
-end
+require("lazy").setup("plugins.specs", {
+	defaults = {
+		lazy = true,
+	},
 
--- 3) Pass them to Lazy.nvim
-require("lazy").setup(plugins, {
-	defaults = { lazy = true },
-	performance = { rtp = { disabled_plugins = { "gzip", "tohtml" } } },
+	rocks = {
+		enabled = false,
+	},
+
+	performance = {
+		rtp = {
+			disabled_plugins = {
+				"gzip",
+				"tohtml",
+			},
+		},
+	},
 })

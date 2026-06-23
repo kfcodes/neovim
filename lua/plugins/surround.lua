@@ -3,8 +3,8 @@
 -- Loaded on buffer read/new.
 
 return {
-  "kylechui/nvim-surround",
-  event   = { "BufReadPre", "BufNewFile" },
-  version = "*",  -- lock to the latest stable release
-  config  = true, -- use its default setup()
+	"kylechui/nvim-surround",
+	event = { "BufReadPre", "BufNewFile" },
+	version = "*",
+	config = true,
 }

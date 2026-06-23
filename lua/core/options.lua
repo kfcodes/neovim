@@ -1,85 +1,110 @@
--- ─── Shorthand ────────────────────────────────────────────────────────────────────
-local o = vim.opt -- global/vim options
-local wo = vim.wo -- window-scoped options
-local bo = vim.bo -- buffer-scoped options
-local g = vim.g -- global vim variables
+-- Shorthand
+local opt = vim.opt
+local g = vim.g
 
--- ─── Basics ────────────────────────────────────────────────────────────────────
-o.number = true -- show absolute line number
-o.relativenumber = true -- show relative numbers for easy motions
-o.cursorline = true -- highlight the current line
-o.signcolumn = "yes" -- always show signcolumn so text doesn't shift
-o.termguicolors = true -- true color support
-o.background = "dark" -- tell colorschemes to use dark variants
-o.showmode = false -- don't show -- INSERT -- etc. (statusline covers it)
-o.breakindent = true -- maintain indent on wrapped lines
+-- Disable unused language providers
+g.loaded_perl_provider = 0
+g.loaded_ruby_provider = 0
 
--- ─── Indentation & Tabs ───────────────────────────────────────────────────────
-o.expandtab = true -- use spaces instead of tabs
-o.tabstop = 2 -- number of spaces per Tab
-o.shiftwidth = 2 -- number of spaces to use for autoindent
-o.smartindent = true -- smart auto-indent new lines
-o.autoindent = true -- copy indent from current line
+-- Leader keys
+g.mapleader = " "
+g.maplocalleader = " "
 
--- ─── Wrapping ─────────────────────────────────────────────────────────────────
-o.wrap = false -- disable line wrap by default
-o.linebreak = true -- wrap at word boundaries when wrap is on
+-- Basics
+opt.number = true
+opt.relativenumber = true
+opt.cursorline = true
+opt.signcolumn = "yes"
+opt.termguicolors = true
+opt.background = "dark"
+opt.showmode = false
+opt.breakindent = true
 
--- ─── Search ───────────────────────────────────────────────────────────────────
-o.ignorecase = true -- case-insensitive search…
-o.smartcase = true -- …unless expression contains uppercase
-o.incsearch = true -- show search matches as you type
-o.hlsearch = false -- disable highlight of all matches by default
+-- Indentation and tabs
+opt.expandtab = true
+opt.tabstop = 2
+opt.shiftwidth = 2
+opt.softtabstop = 2
+opt.smartindent = true
+opt.autoindent = true
 
--- ─── Splits & Windows ─────────────────────────────────────────────────────────
-o.splitright = true -- vertical splits go to the right
-o.splitbelow = true -- horizontal splits go below
-o.scrolloff = 10 -- keep 10 lines visible above/below cursor
-o.sidescrolloff = 8 -- keep 8 columns visible left/right of cursor
+-- Wrapping
+opt.wrap = false
+opt.linebreak = true
 
--- ─── Mouse & Clipboard ────────────────────────────────────────────────────────
-o.mouse = "a" -- enable mouse in all modes
-o.clipboard = "unnamedplus" -- use system clipboard by default
+-- Search
+opt.ignorecase = true
+opt.smartcase = true
+opt.incsearch = true
+opt.hlsearch = false
 
--- ─── File Handling & Undo ─────────────────────────────────────────────────────
-o.undofile = true -- persist undo history
-o.backup = false -- no backup files
-o.swapfile = false -- no swapfile
-o.backspace = "indent,eol,start" -- backspace over autoindent, eol, start
-o.updatetime = 250 -- faster CursorHold & swap writes
-o.timeoutlen = 300 -- time to wait for a mapped sequence
+-- Splits and windows
+opt.splitright = true
+opt.splitbelow = true
+opt.scrolloff = 10
+opt.sidescrolloff = 8
 
--- ─── UI Tweaks ────────────────────────────────────────────────────────────────
-o.list = true -- show whitespace characters
-o.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
-o.inccommand = "split" -- live preview of substitute in split
-o.cmdheight = 1 -- space for command-line messages
-o.ruler = false -- disable ruler (shown in statusline)
+-- Mouse and clipboard
+opt.mouse = "a"
+opt.clipboard = "unnamedplus"
 
--- ─── Performance ───────────────────────────────────────────────────────────────
-o.lazyredraw = true -- don't redraw while executing macros
-o.synmaxcol = 200 -- stop syntax highlighting after this column
+-- File handling and undo
+opt.undofile = true
+opt.backup = false
+opt.swapfile = false
+opt.writebackup = false
+opt.backspace = { "indent", "eol", "start" }
+opt.updatetime = 250
+opt.timeoutlen = 300
 
--- ─── Messaging ─────────────────────────────────────────────────────────────────
-o.shortmess:append("c") -- don't show “match 1 of 2” messages
+-- Completion
+opt.completeopt = { "menu", "menuone", "noselect" }
 
--- ─── Window Title & Status ─────────────────────────────────────────────────────
-o.title = true -- set terminal title to current file
-o.titlestring = "%f – NVIM"
+-- UI tweaks
+opt.list = true
+opt.listchars = {
+	tab = "» ",
+	trail = "·",
+	nbsp = "␣",
+}
+opt.inccommand = "split"
+opt.cmdheight = 1
+opt.ruler = false
+opt.laststatus = 3
 
--- ─── Fill Characters ───────────────────────────────────────────────────────────
-o.fillchars = {
-	vert = "┃", -- vertical split line
-	eob = " ", -- hide ~ on empty lines
-	fold = "·", -- filler for closed folds
+-- Performance
+opt.synmaxcol = 200
+
+-- Messaging
+opt.shortmess:append("c")
+
+-- Window title and status
+opt.title = true
+opt.titlestring = "%f – NVIM"
+
+-- Fill characters
+opt.fillchars = {
+	vert = "┃",
+	eob = " ",
+	fold = "·",
 }
 
--- ─── Cursor Shapes ──────────────────────────────────────────────────────────────
-o.guicursor = {
-	n = "n-v-c:block", -- normal, visual, command modes: block
-	i = "i-ci-ve:ver25", -- insert : vertical bar, 25% width
-	r = "r-cr:hor20", -- replace : horizontal bar, 20% height
+-- Cursor shapes
+opt.guicursor = {
+	n = "n-v-c:block",
+	i = "i-ci-ve:ver25",
+	r = "r-cr:hor20",
 }
 
--- ─── Netrw (optional) ─────────────────────────────────────────────────────────
-g.netrw_liststyle = 3 -- tree-style file browser
+-- Folding
+opt.foldenable = true
+opt.foldlevel = 99
+opt.foldlevelstart = 99
+opt.foldcolumn = "0"
+
+-- Netrw
+g.netrw_liststyle = 3
+g.netrw_banner = 0
+g.netrw_winsize = 25
+
+vim.opt.termguicolors = true

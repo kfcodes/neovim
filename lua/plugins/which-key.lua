@@ -1,36 +1,35 @@
 -- lua/plugins/which-key.lua
 -- Plugin: which-key.nvim
--- Provides a popup displaying available keybindings and their descriptions,
--- organized into logical groups for easier discovery.
+-- Shows available keybindings as you type.
 
 return {
-  "folke/which-key.nvim",
-  -- Delay loading until after startup to avoid impacting initial load time
-  event = "VimEnter",
+	"folke/which-key.nvim",
+	event = "VimEnter",
 
-  -- Options passed to which-key.setup()
-  opts = {
-    icons = {},  -- Disable mini.icons integration to prevent missing-module warnings
-    -- You can add other which-key options here, e.g.:
-    -- key_labels = { ["<leader>"] = "SPC" },
-    -- window = { border = "rounded", position = "bottom" },
-  },
+	dependencies = {
+		"echasnovski/mini.icons",
+	},
 
-  -- Configuration callback, runs after the plugin is loaded
-  config = function(_, opts)
-    -- Import the which-key module
-    local wk = require("which-key")
-    -- Apply the setup options
-    wk.setup(opts)
+	opts = {
+		icons = {},
+	},
 
-    -- Register groups for leader-key mappings using the new spec format.
-    -- Each entry associates a key prefix with a human-readable group name.
-    wk.register({
-      { "<leader>c", group = "[C]ode" },           -- Code-related commands (e.g., build, run, format)
-      { "<leader>d", group = "[D]ebug" },          -- Debugging commands (e.g., breakpoints, step)
-      { "<leader>r", group = "[R]ename/replace" }, -- Rename symbols or perform search-and-replace
-      { "<leader>s", group = "[S]plit/Search" },   -- Window splitting and search utilities
-      { "<leader>w", group = "[W]indow/Tab" },     -- Window and tab management (open, close, navigate)
-    })
-  end,
+	config = function(_, opts)
+		local wk = require("which-key")
+
+		wk.setup(opts)
+
+		-- Only register group prefixes that do not trigger which-key overlap warnings.
+		-- Omitted intentionally:
+		--   <leader>d because <leader>dd and <leader>dl are real mappings
+		--   <leader>e because <leader>ee is a real mapping
+		--   <leader>w because <leader>ww / <leader>wq / <leader>wr are real mappings
+		wk.add({
+			{ "<leader>c", group = "[C]ode" },
+			{ "<leader>h", group = "[H]unks/Git" },
+			{ "<leader>r", group = "[R]ename/replace" },
+			{ "<leader>s", group = "[S]plit/Search" },
+			{ "<leader>x", group = "Trouble/Diagnostics" },
+		})
+	end,
 }

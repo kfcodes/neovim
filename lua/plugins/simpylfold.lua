@@ -6,10 +6,8 @@ return {
 	ft = "python",
 	config = function()
 		-- Plugin globals
-		-- optional: preview docstrings when hovering folded blocks
 		vim.g.simpylfold_docstring_preview = 1
 		vim.g.simpylfold_fold_docstring = 1
-		vim.g.simpylfold_docstring_preview = 1
 		vim.g.simpylfold_fold_imports = 1
 		vim.g.simpylfold_fold_comments = 0
 		vim.g.simpylfold_open_fold_hl = "CursorLineNr"
